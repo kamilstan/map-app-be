@@ -2,6 +2,7 @@ import {AdEntity, NewAdEntity, SimpleAdEntity} from "../types";
 import {ValidationError} from "../utils/errors";
 import {FieldPacket} from "mysql2";
 import {pool} from "../utils/db";
+import {v4 as uuid} from 'uuid';
 
 type AdRecordResults = [AdEntity[], FieldPacket[]];
 
@@ -66,5 +67,14 @@ export class AdRecord implements AdEntity {
         });
     }
 
+    async insert(): Promise<void> {
+        if(!this.id) {
+            this.id = uuid();
+        } else {
+            throw new Error('Cannot insert something tha already exist')
+        }
+
+        await pool.execute("INSERT INTO `ads`(`id`, `name`, `description`, `price`, `url`, `lat`, `lon`) VALUES(:id, :name, :description, :price, :url, :lat, :lon)", this)
+    }
 
 }
