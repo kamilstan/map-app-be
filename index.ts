@@ -22,7 +22,7 @@ const router = Router();
 
 router.use('/ad', adRouter);
 
-app.use('/ad', router)
+app.use('/api', router)
 
 app.use(handleError);
 
